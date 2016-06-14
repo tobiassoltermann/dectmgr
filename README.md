@@ -7,8 +7,15 @@ Dashboard lists all backups available for every device ever seen
 A click on an item provides with all the backups from this device as well as a simple diff mechanism
 ![details](/readme/details.png)
 
+# Pre-Requisites
+Go-Environment of version 1.4.2
 # Installation
 
+## Pre-Compiled
+In the build directory, you currently can find pre-built x64-binaries for Windows and Linux.
+Copy your platform-specific binary in the root of the repository and run it.
+
+## Compile from source
 Checkout the repository, compile and run.
 
 ```bash
