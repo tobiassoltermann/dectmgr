@@ -1,0 +1,151 @@
+{{define "details"}}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Details <small>{{(index .Details.History 0).Hostname}} (<a target="_blank" href="http://{{(index .Details.History 0).IPAddress}}">Link</a>)</small>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h3><span style="font-weight: bold;">Last seen on: </span>{{(index .Details.History 0).LastUpdate}}</h3>
+        </div>
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Config history</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Updated on</th>
+                                    <th>From</th>
+                                    <th>Hash</th>
+                                    <th>View</th>
+                                    <th>Diff</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {{range $key, $value := .Details.History}}
+                                {{if $value}}
+                                <tr class="configHistoryItem" id="line{{$key}}">
+                                    <td>{{$key}}</td>
+                                    <td>{{$value.LastChanged}}</td>
+                                    <td>{{$value.IPAddress}}</td>
+                                    <td>{{$value.Md5Hash}}</td>
+                                    <td><button class="btnview" id="cmdView{{$key}}" type="button" class="btn btn-xs btn-default"><i class="fa fa-fw fa-eye"></i>View</button></td>
+                                    <td><button class="btndiff" id="cmdDiff{{$key}}" type="button" class="btn btn-xs btn-default"><i class="fa fa-fw fa-columns"></i>Diff</button></td>
+                                </tr>
+                                {{end}}
+                              {{end}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Selected config</h3>
+                </div>
+                <div class="panel-body">
+                  <h3 style="float: right; text-align: right;" id="lblRight">Right</h3>
+                  <h3 id="lblLeft">Left</h3>
+                  <div id="mergely-resizer">
+                    <div id="compare">
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <script>
+      var mergely;
+      var lastSelection = 0;
+      var diffSelection = undefined;
+      function changeSelection(newSelection, newDiff) {
+        if (newDiff != undefined) {
+          diffSelection = newDiff;
+
+          $.get("/api/{{.Details.HardwareID}}/config/" + newDiff, function(data, status){
+            $('#compare').mergely("rhs", data);
+          });
+          $.get("/api/{{.Details.HardwareID}}/config/" + newSelection, function(data, status){
+            $('#compare').mergely("lhs", data);
+          });
+
+
+          $("#compare-editor-rhs").css("display", "inline");
+          $("#compare-rhs-margin").css("display", "inline");
+          $("#compare-lhs-compare-rhs-canvas").css("display", "inline");
+
+          $("#lblLeft").html("Selected config: " + newSelection);
+          $("#lblRight").html("Diffed config: " + newDiff);
+        } else {
+          $.get("/api/{{.Details.HardwareID}}/config/" + newSelection, function(data, status){
+            $('#compare').mergely("lhs", data);
+            $('#compare').mergely("rhs", data);
+          });
+          $("#compare-editor-rhs").css("display", "none");
+          $("#compare-rhs-margin").css("display", "none");
+          $("#compare-lhs-compare-rhs-canvas").css("display", "none");
+          $("#lblLeft").html(newSelection);
+          $("#lblRight").html("");
+        }
+
+        $(".configHistoryItem").removeClass("itemSelected");
+        $("#line" + newSelection).addClass("itemSelected");
+        lastSelection = newSelection;
+        $(".btndiff").css("display", "inline");
+        $(".btnview").css("display", "inline");
+        $("#cmdDiff" + newSelection).css("display", "none");
+        $("#cmdView" + newSelection).css("display", "none");
+
+      }
+
+      $("body").ready(function(){
+        $(".configHistoryItem").map(function(itemID){
+          $("#cmdDiff" + itemID).click(function() {
+            changeSelection(lastSelection, itemID);
+          });
+          $("#cmdView" + itemID).click(function(){
+            changeSelection(itemID, undefined);
+          });
+        });
+
+
+      });
+
+      $(document).ready(function () {
+        $('#compare').mergely({
+          width: 'auto',
+          loaded: function() {
+            changeSelection(0);
+          },
+          cmsettings: { readOnly: true },
+          lhs: function(setValue) {
+            setValue("");
+          },
+          rhs: function(setValue) {
+            setValue("");
+          },
+          ignorews: true,
+
+        });
+
+      });
+
+    </script>
+</div>
+<!-- /.container-fluid -->{{end}}

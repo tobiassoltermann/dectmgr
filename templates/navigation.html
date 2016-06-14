@@ -1,0 +1,30 @@
+{{define "navigation"}}
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">{{ .Globals.AppTitle }}</a>
+    </div>
+    <!-- Top Menu Items -->
+
+    <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav side-nav">
+            <li {{if eq .Request.MenuSelection "index"}}class="active"{{end}}>
+                <a href="/index"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+            </li>
+            {{if eq .Request.MenuSelection "details"}}
+            <li {{if eq .Request.MenuSelection "details"}}class="active"{{end}}>
+                <a href="/details"><i class="fa fa-fw fa-info"></i> Details</a>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+</nav>
+{{end}}

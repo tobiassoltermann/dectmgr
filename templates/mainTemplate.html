@@ -1,0 +1,27 @@
+{{define "mainTemplate"}}
+<!DOCTYPE html>
+<html lang="en">
+
+{{template "header" .}}
+
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        {{template "navigation" .}}
+
+        <div id="page-wrapper">
+            {{if eq .Request.MenuSelection "index"}}
+              {{template "index" .}}
+            {{end}}
+            {{if eq .Request.MenuSelection "details"}}
+              {{template "details" .}}
+            {{end}}
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    {{template "footer" .}}
+</body>
+
+</html>
+
+{{end}}

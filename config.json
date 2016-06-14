@@ -1,0 +1,7 @@
+{
+	"ConfigBackupURL"	:	"http://172.16.0.45:8080/backup/#h.txt",
+	"ListenPort"		:	8080,
+	"BackupDestination"	:	"backups/",
+	"MaxNoBackups"		:	5,
+	"Loglevel"			:	"INFO"
+}
