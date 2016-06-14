@@ -52,6 +52,7 @@ The configuration is based on a simple config file (config.json)
 	"MaxNoBackups"		:	5,
 	"Loglevel"			:	"INFO"
 }
+```
 
 Option name | Description
 ----------- | -----------
@@ -60,7 +61,6 @@ ListenPort | Defines the port this tool should listen to. The port should corres
 BackupDestination | This is a relative folder path in which the backup data should be stored. The folder is created for you if it doesn't exist as soon as the first antenna is backupped.
 MaxNoBackups | Older backups are deleted as soon as a newer arrives. This number specifies how many backup versions to keep.
 Loglevel | Specifies the log level and is one of the following strings: "CRITICAL", "ERROR", "WARNING", "NOTICE", "INFO", "DEBUG".
-```
 
 # Configuration of Ascom devices
 
